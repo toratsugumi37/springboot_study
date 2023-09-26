@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns="http://thymeleaf.com">
+<html lang="ko" xmlns:th="http://thymeleaf.com">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
 </head>
 <body>
-  <p th:class="txt-red">Hello world</p>
-    <p>ㅎㅇ</p>
+  <li><a href="" th:text="타임리프텍스트" th:href="@{/products/add}">가나다라</a></li>
+  <!-- 타임리프가 우선시됨. a href를 덮어쓴다 -->
 </body>
 </html>

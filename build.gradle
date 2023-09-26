@@ -56,7 +56,11 @@ dependencies {
 	implementation 'com.sun.xml.bind:jaxb-impl:2.3.3'
 	implementation 'javax.activation:activation:1.1.1'
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
-	
+	compileOnly "org.springframework.boot:spring-boot-devtools"
+
+	// 테스트
+  testCompileOnly 'org.projectlombok:lombok'
+  testAnnotationProcessor 'org.projectlombok:lombok'
 }
 
 tasks.named('test') {
