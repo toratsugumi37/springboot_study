@@ -1,5 +1,7 @@
 package com.example.demo.dao;
 
+import java.util.Optional;
+
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -18,7 +20,7 @@ public class ProductDAOImplTest {
   //등록
   @Test
   @DisplayName("상품등록")
-  void save(){
+  void save() {
     Product product = new Product();
     product.setPname("상품1");
     product.setQuantity(10L);
@@ -26,5 +28,22 @@ public class ProductDAOImplTest {
     Long productId = productDAO.save(product);
     log.info("상품아이디 ={}", productId);
     Assertions.assertThat(productId).isGreaterThan(0L);
+  }
+  
+  @Test
+  @DisplayName("조회")
+  void findById() {
+
+    Optional<Product> product = productDAO.findById(82L);
+    // if(product.isPresent()){
+    //   log.info("ㅇㅇ");
+    // }else{
+    //   log.info("조회결과 없음");
+    // }
+    Product findedProduct = product.orElseThrow();
+    Assertions.assertThat(findedProduct.getPname()).isEqualTo("상품1");
+    Assertions.assertThat(findedProduct.getQuantity()).isEqualTo(100L);
+    Assertions.assertThat(findedProduct.getPrice()).isEqualTo(10000L);
+
   }
 }

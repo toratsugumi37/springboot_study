@@ -12,7 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-  @Controller
+@Controller
 @RequestMapping("/products") // http://localhgost:9080/products
 @RequiredArgsConstructor
 public class ProductController {

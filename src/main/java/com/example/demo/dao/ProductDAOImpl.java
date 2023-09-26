@@ -1,5 +1,10 @@
 package com.example.demo.dao;
 
+import java.util.Map;
+import java.util.Optional;
+
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -33,10 +38,54 @@ public class ProductDAOImpl implements ProductDAO {
 
     SqlParameterSource param = new BeanPropertySqlParameterSource(product);
     KeyHolder keyHolder = new GeneratedKeyHolder();
-    template.update(sql.toString(), param, keyHolder,new String[]{"product_id"});
+    template.update(sql.toString(), param, keyHolder, new String[] { "product_id" });
 
-    long productId = keyHolder.getKey().longValue();    //상품ID값을 읽음
+    long productId = keyHolder.getKey().longValue(); //상품ID값을 읽음
     return productId;
+  }
+
+  //  람다
+  // private RowMapper<Product> productRowMapper() {
+  //   return (rs, rowNum) -> {
+  //     Product product = new Product();
+  //     product.setProductId(rs.getLong("product_id"));
+  //     product.setPname(rs.getString("pname"));
+  //     product.setQuantity(rs.getLong("quantity"));
+  //     product.setPrice(rs.getLong("price"));
+
+  //     return product;
+  //   };
+  // }
+  
+  private RowMapper<Product> productRowMapper() {
+    return (rs, rowNum) -> {
+      Product product = new Product();
+      product.setProductId(rs.getLong("product_id"));
+      product.setPname(rs.getString("pname"));
+      product.setQuantity(rs.getLong("quantity"));
+      product.setPrice(rs.getLong("price"));
+
+      return product;
+    };
+  }
+  
+  MyRowMapper myRowMapper = new MyRowMapper();
+  
+  @Override
+  public Optional<Product> findById(Long productId) {
+    StringBuffer sql = new StringBuffer();
+    sql.append("select product_id, pname, quantity, price from product where product_id = :id");
+
+    try{
+    //조회 : (단일행, 단일열), (단일행, 다중열), (다중행, 단일열), (다중행, 다중열) 
+    // 값은  ProductDAO에 저장한다.
+    Map<String,Long> param = Map.of("id",productId);
+    Product product = template.queryForObject(sql.toString(), param, myRowMapper);
+    return Optional.of(product);
+  } catch (EmptyResultDataAccessException e) {
+      
+    }
+    return Optional.empty();
   }
   
 }
