@@ -13,6 +13,7 @@ public interface ProductSVC {
   List<Product> findAll();
 
   int deleteById(Long productId);
+
 }
 
 

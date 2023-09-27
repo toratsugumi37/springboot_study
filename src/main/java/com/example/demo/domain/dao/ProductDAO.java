@@ -16,4 +16,6 @@ public interface ProductDAO {
   List<Product> findAll();
 
   int deleteById(Long productId);
+
+//  Optional<Product> update(Long productid);
 }

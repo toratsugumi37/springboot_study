@@ -2,6 +2,7 @@ package com.example.demo.web;
 
 import com.example.demo.web.form.AllForm;
 import com.example.demo.web.form.DetailForm;
+import com.example.demo.web.form.UpdateForm;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -124,10 +125,38 @@ public class ProductController {
     return "product/all";
   }
 
-  @GetMapping("/{id}/delete")    //DELETE http://localhost:6060/products/{id}/delete
+//  @GetMapping("/{id}/delete")    //GET http://localhost:6060/products/{id}/delete
+  @DeleteMapping("/{id}/delete")    //DELETE http://localhost:6060/products/{id}/delete
   public String deleteById(@PathVariable Long id){
     int deletedRowCnt = productSVC.deleteById(id);
     return "redirect:/products";
   }
+
+  @GetMapping("{id}/update")
+  public String updatePage(@PathVariable Long id, Model model){
+      log.info("수정 호출됨");
+      Optional<Product> findedProduct = productSVC.findById(id);
+
+      Product product = findedProduct.orElseThrow();
+
+      UpdateForm updateForm = new UpdateForm();
+      updateForm.setProductId(product.getProductId());
+      updateForm.setPname(product.getPname());
+      updateForm.setQuantity(product.getQuantity());
+      updateForm.setPrice(product.getPrice());
+
+      model.addAttribute("updateForm",updateForm);
+      return "product/update";
+  }
+
+  @PatchMapping("{id}/update")
+  public String updateById(@PathVariable Long id, UpdateForm updateForm, RedirectAttributes redirectAttributes){
+    log.info("찐 수정 호출됨");
+    log.info("updateForm={}", updateForm);
+
+    redirectAttributes.addAttribute("id",id);
+      return "redirect:/products/{id}/detail";
+  }
+
 
 }

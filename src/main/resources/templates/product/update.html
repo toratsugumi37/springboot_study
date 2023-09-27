@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script type="module">
+    //목록
+    btnFindAll.addEventListener('click',(e)=> globalThis.location.href="/products");
+    //저장
+    btnUpdate.addEventListner('click',(e)=>{
+
+    })
+    
+  </script>
+</head>
+<body>
+<div>상품수정</div>
+<form action="" th:method="patch" th:object="${updateForm}"> <!-- th:object로 Model을 데려올수있다. ( =${키값})-->
+    <div><label for="productId">상품번호</label><input type="text" id="productId" name="productId"  th:value="${updateForm.productId}"></div>
+    <div><label for="pname">상품명</label><input type="text" id="pname" name="pname"  th:value="${updateForm.pname}" /></div>
+    <div><label for="quantity">수량</label><input type="text" id="quantity" name="quantity"  th:value="${updateForm.quantity}"/></div>
+    <div><label for="price">가격</label><input type="text" id="price" name="price"  th:value="${updateForm.price}" /></div>
+    <div>
+        <input type="submit" value="저장" id="btnUpdate" /> <!-- th:value로 값을 가져올수있다. ( =${키값.밸류값})-->
+        <input type="button" value="목록" id="btnFindAll"/>
+    </div>
+</form>
+</body>
+</html>
