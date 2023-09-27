@@ -6,6 +6,30 @@
     <title>Document</title>
   </head>
   <body>
-    DD
+    <div>상품조회</div>
+    <form action="/products/add2" method="get" th:object="${detailForm}"> <!-- th:object로 Model을 데려올수있다. ( =${키값})-->
+      <div><label for="productId">상품번호</label><input type="text" id="productId" name="productId" disabled th:value="${detailForm.productId}"></div>
+      <div><label for="pname">상품명</label><input type="text" id="pname" name="pname" disabled th:value="${detailForm.pname}" /></div>
+      <div><label for="quantity">수량</label><input type="text" id="quantity" name="quantity" disabled th:value="${detailForm.quantity}"/></div>
+      <div><label for="price">가격</label><input type="text" id="price" name="price" disabled th:value="${detailForm.price}" /></div>
+      <div>
+      <input type="button" value="수정" id="btnUpdate" th:data-product-id="${detailForm.productId}"/>                     <!-- th:value로 값을 가져올수있다. ( =${키값.밸류값})-->
+      <input type="button" value="삭제" id="btnDelete" th:data-product-id="${detailForm.productId}"/>
+      <input type="button" value="목록" id="btnFindAll"/>
+      </div>
+    </form>
+    <script>
+      document.getElementById('btnDelete').addEventListener('click',(e)=>{
+      if(confirm('삭제하시겠습니까?')){
+        const productId = e.target.dataset.productId
+        globalThis.location.href=`/products/${productId}/delete`;
+        }else{
+          return false;
+        }
+      });
+      document.getElementById('btnFindAll').addEventListener('click',(e)=>{
+        globalThis.location.href='/products';     // GET방식으로 url요청
+      });
+    </script>
   </body>
 </html>

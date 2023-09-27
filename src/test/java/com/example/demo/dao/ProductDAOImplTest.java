@@ -1,7 +1,10 @@
 package com.example.demo.dao;
 
+import java.util.List;
 import java.util.Optional;
 
+import com.example.demo.domain.dao.Product;
+import com.example.demo.domain.dao.ProductDAO;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -42,8 +45,25 @@ public class ProductDAOImplTest {
     // }
     Product findedProduct = product.orElseThrow();
     Assertions.assertThat(findedProduct.getPname()).isEqualTo("상품1");
-    Assertions.assertThat(findedProduct.getQuantity()).isEqualTo(100L);
+    Assertions.assertThat(findedProduct.getQuantity()).isEqualTo(10L);
     Assertions.assertThat(findedProduct.getPrice()).isEqualTo(10000L);
 
+  }
+
+  @Test
+  @DisplayName("목록")
+  void findAll(){
+    List<Product> list = productDAO.findAll();
+    log.info("목록={}", list);
+    Assertions.assertThat(list.size()).isGreaterThan(0);
+  }
+
+  @Test
+  @DisplayName("단건삭제")
+  void deleteById(){
+    Long productId = 92L;
+    int deletedRowCnt = productDAO.deleteById(productId);
+
+    Assertions.assertThat(deletedRowCnt).isEqualTo(1);
   }
 }

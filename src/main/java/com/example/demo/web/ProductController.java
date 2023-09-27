@@ -1,15 +1,22 @@
 package com.example.demo.web;
 
+import com.example.demo.web.form.AllForm;
+import com.example.demo.web.form.DetailForm;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.example.demo.dao.Product;
-import com.example.demo.svc.ProductSVC;
+import com.example.demo.domain.dao.Product;
+import com.example.demo.domain.svc.ProductSVC;
 import com.example.demo.web.form.SaveForm;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Controller
@@ -55,9 +62,18 @@ public class ProductController {
 
     // 조회
     @GetMapping("/{id}/detail")   //GET http://localhost:6060/products/1/detail
-    public String findById(@PathVariable("id") Long id) {
+    public String findById(@PathVariable("id") Long id , Model model) {
       // 상품조회
+      Optional<Product> findedProduct = productSVC.findById(id);
+      Product product = findedProduct.orElseThrow();
 
+      DetailForm detailForm = new DetailForm();
+      detailForm.setProductId(product.getProductId());
+      detailForm.setPname(product.getPname());
+      detailForm.setQuantity(product.getQuantity());
+      detailForm.setPrice(product.getPrice());
+
+      model.addAttribute("detailForm",detailForm);
       return "product/detailForm";
     }
 
@@ -89,6 +105,29 @@ public class ProductController {
 //      return "redirect:/products/{id}/detail";
     return "redirect:/products/{id}/detail";
   }
-    
+
+  //목록
+  @GetMapping       //GET http://localhost:6060/products
+  public String findAll(Model model){
+      log.info("전체목록 조회 호출됨");
+    List<Product> list = productSVC.findAll(); // 도메인에서 가져온 데이터. 좋은 방법이 아니다.
+                                               // 도메인에서 가져온 데이터를 web쪽에 노출하지 않게 만들어야한다.
+    List<AllForm> all = new ArrayList<>();
+    for(Product product :list) {
+      AllForm allForm = new AllForm();
+      allForm.setProductId(product.getProductId());
+      allForm.setPname(product.getPname());
+      all.add(allForm);
+    }
+
+    model.addAttribute("all",all);
+    return "product/all";
+  }
+
+  @GetMapping("/{id}/delete")    //DELETE http://localhost:6060/products/{id}/delete
+  public String deleteById(@PathVariable Long id){
+    int deletedRowCnt = productSVC.deleteById(id);
+    return "redirect:/products";
+  }
 
 }

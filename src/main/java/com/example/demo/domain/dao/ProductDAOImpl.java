@@ -1,9 +1,9 @@
-package com.example.demo.dao;
+package com.example.demo.domain.dao;
 
-import java.util.Map;
-import java.util.Optional;
-
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -12,23 +12,15 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @Slf4j
 @Repository // DAO 역할을 하는 클래스
 @RequiredArgsConstructor // final 멤버필드를 매개값으로 갖는 생성자를 자동 생성해준다.
 public class ProductDAOImpl implements ProductDAO {
-  
   private final NamedParameterJdbcTemplate template;
-
-  //  생성자가 필요하지만 RequiredArgsConstructor가 lombok을 통해 자동으로 생성해준다.
-  //   @Autowired 
-  //   public ProductDAOImpl(NamedParameterJdbcTemplate template){
-  //   this.template = template;
-  //   }
-
-
   // ProductDAO의 재정의
   @Override
   public Long save(Product product) {
@@ -87,5 +79,23 @@ public class ProductDAOImpl implements ProductDAO {
     }
     return Optional.empty();
   }
-  
+
+  @Override
+  public List<Product> findAll() {
+    StringBuffer sql = new StringBuffer();
+    sql.append("select product_id, pname, quantity, price ");
+    sql.append("from product ");
+    sql.append("order by product_id asc");
+
+      List<Product> list = template.query(sql.toString(), BeanPropertyRowMapper.newInstance(Product.class));
+      return list;
+  }
+
+  @Override
+  public int deleteById(Long productId) {
+    String sql = "delete from product where product_id = :productId";
+    int deletedRowCnt = template.update(sql, Map.of("productId", productId));
+
+    return deletedRowCnt;
+  }
 }

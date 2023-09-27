@@ -1,4 +1,4 @@
-package com.example.demo.dao;
+package com.example.demo.domain.dao;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
